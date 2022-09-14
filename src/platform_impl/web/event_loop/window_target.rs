@@ -219,21 +219,23 @@ impl<T> EventLoopWindowTarget<T> {
             });
         });
 
-        let runner = self.runner.clone();
-        canvas.on_mouse_wheel(
-            move |pointer_id, delta, modifiers| {
-                runner.send_event(Event::WindowEvent {
-                    window_id: RootWindowId(id),
-                    event: WindowEvent::MouseWheel {
-                        device_id: RootDeviceId(DeviceId(pointer_id)),
-                        delta,
-                        phase: TouchPhase::Moved,
-                        modifiers,
-                    },
-                });
-            },
-            prevent_default,
-        );
+        // Anysphere clone: we handle mouse wheels separately.
+        //
+        // let runner = self.runner.clone();
+        // canvas.on_mouse_wheel(
+        //     move |pointer_id, delta, modifiers| {
+        //         runner.send_event(Event::WindowEvent {
+        //             window_id: RootWindowId(id),
+        //             event: WindowEvent::MouseWheel {
+        //                 device_id: RootDeviceId(DeviceId(pointer_id)),
+        //                 delta,
+        //                 phase: TouchPhase::Moved,
+        //                 modifiers,
+        //             },
+        //         });
+        //     },
+        //     prevent_default,
+        // );
 
         let runner = self.runner.clone();
         let raw = canvas.raw().clone();
