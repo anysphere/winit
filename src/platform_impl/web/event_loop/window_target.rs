@@ -63,8 +63,11 @@ impl<T> EventLoopWindowTarget<T> {
         let mut canvas = canvas.borrow_mut();
         canvas.set_attribute("data-raw-handle", &id.0.to_string());
 
-        canvas.on_touch_start(prevent_default);
-        canvas.on_touch_end(prevent_default);
+        //
+        // Modified in Anysphere: we want to actually process touch events!
+        //
+        // canvas.on_touch_start(prevent_default);
+        // canvas.on_touch_end(prevent_default);
 
         let runner = self.runner.clone();
         canvas.on_blur(move || {
