@@ -138,89 +138,91 @@ impl<T> EventLoopWindowTarget<T> {
             prevent_default,
         );
 
-        let runner = self.runner.clone();
-        canvas.on_cursor_leave(move |pointer_id| {
-            runner.send_event(Event::WindowEvent {
-                window_id: RootWindowId(id),
-                event: WindowEvent::CursorLeft {
-                    device_id: RootDeviceId(DeviceId(pointer_id)),
-                },
-            });
-        });
+        // Anysphere fork: we handle mouse movements separately
 
-        let runner = self.runner.clone();
-        canvas.on_cursor_enter(move |pointer_id| {
-            runner.send_event(Event::WindowEvent {
-                window_id: RootWindowId(id),
-                event: WindowEvent::CursorEntered {
-                    device_id: RootDeviceId(DeviceId(pointer_id)),
-                },
-            });
-        });
+        // let runner = self.runner.clone();
+        // canvas.on_cursor_leave(move |pointer_id| {
+        //     runner.send_event(Event::WindowEvent {
+        //         window_id: RootWindowId(id),
+        //         event: WindowEvent::CursorLeft {
+        //             device_id: RootDeviceId(DeviceId(pointer_id)),
+        //         },
+        //     });
+        // });
 
-        let runner = self.runner.clone();
-        canvas.on_cursor_move(
-            move |pointer_id, position, delta, modifiers| {
-                runner.send_event(Event::WindowEvent {
-                    window_id: RootWindowId(id),
-                    event: WindowEvent::CursorMoved {
-                        device_id: RootDeviceId(DeviceId(pointer_id)),
-                        position,
-                        modifiers,
-                    },
-                });
-                runner.send_event(Event::DeviceEvent {
-                    device_id: RootDeviceId(DeviceId(pointer_id)),
-                    event: DeviceEvent::MouseMotion {
-                        delta: (delta.x, delta.y),
-                    },
-                });
-            },
-            prevent_default,
-        );
+        // let runner = self.runner.clone();
+        // canvas.on_cursor_enter(move |pointer_id| {
+        //     runner.send_event(Event::WindowEvent {
+        //         window_id: RootWindowId(id),
+        //         event: WindowEvent::CursorEntered {
+        //             device_id: RootDeviceId(DeviceId(pointer_id)),
+        //         },
+        //     });
+        // });
 
-        let runner = self.runner.clone();
-        canvas.on_mouse_press(move |pointer_id, position, button, modifiers| {
-            // A mouse down event may come in without any prior CursorMoved events,
-            // therefore we should send a CursorMoved event to make sure that the
-            // user code has the correct cursor position.
-            runner.send_events(
-                std::iter::once(Event::WindowEvent {
-                    window_id: RootWindowId(id),
-                    event: WindowEvent::Focused(true),
-                })
-                .chain(std::iter::once(Event::WindowEvent {
-                    window_id: RootWindowId(id),
-                    event: WindowEvent::CursorMoved {
-                        device_id: RootDeviceId(DeviceId(pointer_id)),
-                        position,
-                        modifiers,
-                    },
-                }))
-                .chain(std::iter::once(Event::WindowEvent {
-                    window_id: RootWindowId(id),
-                    event: WindowEvent::MouseInput {
-                        device_id: RootDeviceId(DeviceId(pointer_id)),
-                        state: ElementState::Pressed,
-                        button,
-                        modifiers,
-                    },
-                })),
-            );
-        });
+        // let runner = self.runner.clone();
+        // canvas.on_cursor_move(
+        //     move |pointer_id, position, delta, modifiers| {
+        //         runner.send_event(Event::WindowEvent {
+        //             window_id: RootWindowId(id),
+        //             event: WindowEvent::CursorMoved {
+        //                 device_id: RootDeviceId(DeviceId(pointer_id)),
+        //                 position,
+        //                 modifiers,
+        //             },
+        //         });
+        //         runner.send_event(Event::DeviceEvent {
+        //             device_id: RootDeviceId(DeviceId(pointer_id)),
+        //             event: DeviceEvent::MouseMotion {
+        //                 delta: (delta.x, delta.y),
+        //             },
+        //         });
+        //     },
+        //     prevent_default,
+        // );
 
-        let runner = self.runner.clone();
-        canvas.on_mouse_release(move |pointer_id, button, modifiers| {
-            runner.send_event(Event::WindowEvent {
-                window_id: RootWindowId(id),
-                event: WindowEvent::MouseInput {
-                    device_id: RootDeviceId(DeviceId(pointer_id)),
-                    state: ElementState::Released,
-                    button,
-                    modifiers,
-                },
-            });
-        });
+        // let runner = self.runner.clone();
+        // canvas.on_mouse_press(move |pointer_id, position, button, modifiers| {
+        //     // A mouse down event may come in without any prior CursorMoved events,
+        //     // therefore we should send a CursorMoved event to make sure that the
+        //     // user code has the correct cursor position.
+        //     runner.send_events(
+        //         std::iter::once(Event::WindowEvent {
+        //             window_id: RootWindowId(id),
+        //             event: WindowEvent::Focused(true),
+        //         })
+        //         .chain(std::iter::once(Event::WindowEvent {
+        //             window_id: RootWindowId(id),
+        //             event: WindowEvent::CursorMoved {
+        //                 device_id: RootDeviceId(DeviceId(pointer_id)),
+        //                 position,
+        //                 modifiers,
+        //             },
+        //         }))
+        //         .chain(std::iter::once(Event::WindowEvent {
+        //             window_id: RootWindowId(id),
+        //             event: WindowEvent::MouseInput {
+        //                 device_id: RootDeviceId(DeviceId(pointer_id)),
+        //                 state: ElementState::Pressed,
+        //                 button,
+        //                 modifiers,
+        //             },
+        //         })),
+        //     );
+        // });
+
+        // let runner = self.runner.clone();
+        // canvas.on_mouse_release(move |pointer_id, button, modifiers| {
+        //     runner.send_event(Event::WindowEvent {
+        //         window_id: RootWindowId(id),
+        //         event: WindowEvent::MouseInput {
+        //             device_id: RootDeviceId(DeviceId(pointer_id)),
+        //             state: ElementState::Released,
+        //             button,
+        //             modifiers,
+        //         },
+        //     });
+        // });
 
         // Anysphere clone: we handle mouse wheels separately.
         //
