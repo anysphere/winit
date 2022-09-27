@@ -153,6 +153,7 @@ pub mod event;
 pub mod event_loop;
 mod icon;
 pub mod monitor;
+#[allow(unused_imports, dead_code)]
 mod platform_impl;
 pub mod window;
 
